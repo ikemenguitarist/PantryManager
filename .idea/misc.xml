@@ -4,6 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Ryuichi/AndroidStudioProjects/PantryManager/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/Ryuichi/AndroidStudioProjects/PantryManager/app/src/main/res/layout/fragment_add_item.xml" value="0.11666666666666667" />
+        <entry key="..\:/Users/Ryuichi/AndroidStudioProjects/PantryManager/app/src/main/res/layout/fragment_item.xml" value="0.1" />
+        <entry key="..\:/Users/Ryuichi/AndroidStudioProjects/PantryManager/app/src/main/res/layout/fragment_item_detail.xml" value="0.1" />
+        <entry key="..\:/Users/Ryuichi/AndroidStudioProjects/PantryManager/app/src/main/res/layout/fragment_item_list_item.xml" value="0.33" />
+        <entry key="..\:/Users/Ryuichi/AndroidStudioProjects/PantryManager/app/src/main/res/layout/fragment_pantry.xml" value="0.25" />
         <entry key="..\:/Users/Ryuichi/AndroidStudioProjects/PantryManager/app/src/main/res/menu/bottom_nav_menu.xml" value="0.11666666666666667" />
       </map>
     </option>

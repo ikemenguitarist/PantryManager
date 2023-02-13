@@ -3,23 +3,58 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_pantry">
 
     <fragment
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_pantry"
         android:name="com.ikemenguitarist.pantrymanager.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_pantry" />
+        android:label="@string/title_pantry"
+        tools:layout="@layout/fragment_pantry" >
+        <action
+            android:id="@+id/action_navigation_pantry_to_itemFragment"
+            app:destination="@id/itemFragment" />
+    </fragment>
 
     <fragment
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_memo"
         android:name="com.ikemenguitarist.pantrymanager.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
+        android:label="@string/title_memo"
         tools:layout="@layout/fragment_memo" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_recipe"
         android:name="com.ikemenguitarist.pantrymanager.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
+        android:label="@string/title_recipe"
         tools:layout="@layout/fragment_recipe" />
+    <fragment
+        android:id="@+id/itemFragment"
+        android:name="com.ikemenguitarist.pantrymanager.ItemFragment"
+        android:label="ItemFragment" >
+        <action
+            android:id="@+id/action_itemFragment_to_addItemFragment"
+            app:destination="@id/addItemFragment" />
+        <action
+            android:id="@+id/action_itemFragment_to_itemDetailFragment"
+            app:destination="@id/itemDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addItemFragment"
+        android:name="com.ikemenguitarist.pantrymanager.AddItemFragment"
+        android:label="AddItemFragment" >
+        <action
+            android:id="@+id/action_addItemFragment_to_itemFragment"
+            app:destination="@id/itemFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/itemDetailFragment"
+        android:name="com.ikemenguitarist.pantrymanager.ItemDetailFragment"
+        android:label="fragment_item_detail"
+        tools:layout="@layout/fragment_item_detail" >
+        <argument
+            android:name="item_id"
+            app:argType="integer" />
+    </fragment>
+    <argument
+        android:name="item_id"
+        app:argType="integer" />
 </navigation>
