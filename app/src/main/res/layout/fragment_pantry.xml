@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.slidingpanelayout.widget.SlidingPaneLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-        <variable
-            name="viewModel"
-            type="com.example.android.marsphotos.overview.OverviewViewModel" />
-    </data>
-
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sliding_pane_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/photo_grid"
+        android:id="@+id/stock_grid"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:padding="6dp"
@@ -26,9 +24,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:spanCount="2"
-        app:listData="@{viewModel.photos}"
-        tools:itemCount="16"
-        tools:listitem="@layout/grid_view_item"/>
+        tools:itemCount="16"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
@@ -43,3 +39,12 @@
         app:tint="@android:color/white" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/detail_container"
+        android:name="com.ikemenguitarist.pantrymanager.AddStockerFragment"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+
+</androidx.slidingpanelayout.widget.SlidingPaneLayout>

@@ -17,3 +17,18 @@ interface ItemDao {
     @Query("SELECT * from item ORDER BY name ASC")
     fun getItems(): Flow<List<Item>>
 }
+
+@Dao
+interface StockerDao {
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(stocker: Stocker)
+    @Update
+    suspend fun update(stocker: Stocker)
+    @Delete
+    suspend fun delete(stocker: Stocker)
+    @Query("SELECT * from stocker WHERE id = :id")
+    fun getStocker(id:Int): Flow<Stocker>
+
+    @Query("SELECT * from stocker ORDER BY name ASC")
+    fun getStockers(): Flow<List<Stocker>>
+}

@@ -1,11 +1,11 @@
 package com.ikemenguitarist.pantrymanager.data
 
 import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
+import androidx.room.*
+import java.util.*
 
-@Database(entities = [Item::class], version = 1, exportSchema = false)
+@Database(entities = [Item::class,Stocker::class,Recipe::class], version = 1, exportSchema = false)
+@TypeConverters(Converters::class)
 abstract class ItemRoomDatabase:RoomDatabase() {
     abstract fun itemDao():ItemDao
     companion object{
@@ -22,5 +22,16 @@ abstract class ItemRoomDatabase:RoomDatabase() {
             }
         }
 
+    }
+}
+class Converters {
+    @TypeConverter
+    fun fromTimestamp(value: Long?): Date? {
+        return value?.let { Date(it) }
+    }
+
+    @TypeConverter
+    fun dateToTimestamp(date: Date?): Long? {
+        return date?.time
     }
 }

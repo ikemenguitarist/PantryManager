@@ -1,6 +1,5 @@
 package com.ikemenguitarist.pantrymanager
 
-import android.app.DatePickerDialog
 import android.content.Context
 import android.icu.text.SimpleDateFormat
 import android.os.Bundle
@@ -9,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.DatePicker
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -17,7 +15,7 @@ import androidx.navigation.fragment.navArgs
 import com.ikemenguitarist.pantrymanager.data.Item
 import com.ikemenguitarist.pantrymanager.databinding.FragmentAddItemBinding
 
-class AddItemFragment : Fragment(),DatePickerDialog.OnDateSetListener {
+class AddStockerFragment : Fragment() {
     private val viewModel:StockViewModel by activityViewModels()
 
 
@@ -63,20 +61,6 @@ class AddItemFragment : Fragment(),DatePickerDialog.OnDateSetListener {
         inputMethodManager.hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, 0)
         _binding = null
     }
-    private fun showDatePicker() {
-        val datePickerDialog = DatePickerDialog(
-            requireActivity(),
-            DatePickerDialog.OnDateSetListener() { view, year, month, dayOfMonth ->
-
-                binding.itemLimit.setText("選択した日付は「${year}/${month + 1}/${dayOfMonth}」です")
-            },
-            2020,
-            3,
-            1
-        )
-        datePickerDialog.show()
-    }
-
     private fun isEntryValid():Boolean{
         return viewModel.isEntryValid(
             binding.itemName.text.toString(),
@@ -114,10 +98,5 @@ class AddItemFragment : Fragment(),DatePickerDialog.OnDateSetListener {
         }
         val action = AddItemFragmentDirections.actionAddItemFragmentToItemFragment()
         findNavController().navigate(action)
-    }
-
-    override fun onDateSet(view: DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int) {
-        val str: String = getString(R.string.stringformat, year, monthOfYear+1, dayOfMonth)
-        binding.itemLimit.setText(str)
     }
 }

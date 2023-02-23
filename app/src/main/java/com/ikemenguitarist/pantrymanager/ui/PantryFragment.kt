@@ -1,4 +1,4 @@
-package com.ikemenguitarist.pantrymanager
+package com.ikemenguitarist.pantrymanager.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,14 +10,18 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
+import com.ikemenguitarist.pantrymanager.R
+import com.ikemenguitarist.pantrymanager.StockViewModel
 import com.ikemenguitarist.pantrymanager.databinding.FragmentItemBinding
+import com.ikemenguitarist.pantrymanager.databinding.FragmentPantryBinding
 import com.ikemenguitarist.pantrymanager.ui.ItemListAdapter
+import com.ikemenguitarist.pantrymanager.ui.home.HomeFragmentDirections
 
 
 class ItemFragment : Fragment() {
     private val viewModel: StockViewModel by activityViewModels()
 
-    private var _binding: FragmentItemBinding? = null
+    private var _binding: FragmentPantryBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -25,7 +29,7 @@ class ItemFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentItemBinding.inflate(inflater, container, false)
+        _binding = FragmentPantryBinding.inflate(inflater, container, false)
 
         val slidingPaneLayout = binding.slidingPaneLayout
 
@@ -40,26 +44,25 @@ class ItemFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = ItemListAdapter {
-            viewModel.updateCurrentState(getString(R.string.item_detail_fragment_title))
-            // Navigate to the details screen
-            binding.slidingPaneLayout.openPane()
+        val adapter = StockListAdapter {
+            val action = HomeFragmentDirections.actionNavigationPantryToItemFragment()
+                // getString(R.string.add_fragment_title)
+            this.findNavController().navigate(action)
         }
-        binding.itemGrid.layoutManager = LinearLayoutManager(this.context)
-        binding.itemGrid.adapter = adapter
+        binding.stockGrid.layoutManager = LinearLayoutManager(this.context)
+        binding.stockGrid.adapter = adapter
         // Attach an observer on the allItems list to update the UI automatically when the data
         // changes.
-        viewModel.allItems.observe(this.viewLifecycleOwner) { items ->
-            items.let {
+        viewModel.allStockers.observe(this.viewLifecycleOwner) { stockers ->
+            stockers.let {
                 adapter.submitList(it)
             }
         }
 
         binding.floatingActionButton.setOnClickListener {
-            val action = ItemFragmentDirections.actionItemFragmentToAddItemFragment(
-                // getString(R.string.add_fragment_title)
-            )
-            this.findNavController().navigate(action)
+            viewModel.updateCurrentState(getString(R.string.item_detail_fragment_title))
+            // Navigate to the details screen
+            binding.slidingPaneLayout.openPane()
         }
     }
 }
