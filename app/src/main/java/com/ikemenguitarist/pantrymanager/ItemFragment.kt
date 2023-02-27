@@ -1,15 +1,16 @@
 package com.ikemenguitarist.pantrymanager
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.*
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.ikemenguitarist.pantrymanager.databinding.FragmentItemBinding
 import com.ikemenguitarist.pantrymanager.ui.ItemListAdapter
 
@@ -19,6 +20,7 @@ class ItemFragment : Fragment() {
 
     private var _binding: FragmentItemBinding? = null
     private val binding get() = _binding!!
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,6 +45,13 @@ class ItemFragment : Fragment() {
         val adapter = ItemListAdapter {
             viewModel.updateCurrentState(getString(R.string.item_detail_fragment_title))
             // Navigate to the details screen
+            parentFragmentManager.commit {
+                setReorderingAllowed(true)
+                replace<AddItemFragment>(R.id.detail_container)
+                // If we're already open and the detail pane is visible,
+                // crossfade between the fragments.
+                setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+            }
             binding.slidingPaneLayout.openPane()
         }
         binding.itemGrid.layoutManager = LinearLayoutManager(this.context)
@@ -56,10 +65,15 @@ class ItemFragment : Fragment() {
         }
 
         binding.floatingActionButton.setOnClickListener {
-            val action = ItemFragmentDirections.actionItemFragmentToAddItemFragment(
-                // getString(R.string.add_fragment_title)
-            )
-            this.findNavController().navigate(action)
+            viewModel.updateCurrentState(getString(R.string.add_fragment_title))
+            parentFragmentManager.commit {
+                setReorderingAllowed(true)
+                replace<AddItemFragment>(R.id.detail_container)
+                // If we're already open and the detail pane is visible,
+                // crossfade between the fragments.
+                setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+
+            }
         }
     }
 }
@@ -86,4 +100,5 @@ class ItemListOnBackPressedCallback(
     override fun onPanelClosed(panel: View) {
         isEnabled = false
     }
+
 }

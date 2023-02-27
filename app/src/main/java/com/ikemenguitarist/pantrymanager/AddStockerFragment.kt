@@ -22,7 +22,7 @@ class AddStockerFragment : Fragment() {
 
     lateinit var item: Item
 
-    private val navigationArgs: ItemDetailFragmentArgs by navArgs()
+    //private val navigationArgs: ItemDetailFragmentArgs by navArgs()
 
     // Binding object instance corresponding to the fragment_add_item.xml layout
     // This property is non-null between the onCreateView() and onDestroyView() lifecycle callbacks,
@@ -39,17 +39,21 @@ class AddStockerFragment : Fragment() {
         return binding.root
     }
 
-    /**
-     * Called before fragment is destroyed.
-     */
+    //switch fragment between detail one and add one by currentState
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val id = navigationArgs.itemId
-        if(id>0){
-            viewModel.retrieveItem(id).observe(this.viewLifecycleOwner){selectItem ->
+
+        when(viewModel.currentState.value){
+            getString(R.string.stocker_detail_fragment_title)-> {
+                viewModel.retrieveItem(id).observe(this.viewLifecycleOwner){selectItem ->
                 item = selectItem
                 bind(item)}
-        }else{binding.saveAction.setOnClickListener { addNewItem() }
+            }
+            getString(R.string.add_stocker_fragment_title)->{
+                binding.saveAction.setOnClickListener { addNewItem() }
+            }
+            else->{
+            }
 
         }
     }
@@ -84,10 +88,10 @@ class AddStockerFragment : Fragment() {
             itemName.setText(item.itemName, TextView.BufferType.SPANNABLE)
             itemLimit.setText(item.limit.toString(), TextView.BufferType.SPANNABLE)
             itemCount.setText(item.itemQuantity.toString(), TextView.BufferType.SPANNABLE)
-            saveAction.setOnClickListener { updateItem() }
+            //saveAction.setOnClickListener { updateItem() }
         }
     }
-    private fun updateItem(){
+    /*private fun updateItem(){
         if(isEntryValid()){
             viewModel.updateItem(
                 this.navigationArgs.itemId,
@@ -98,5 +102,5 @@ class AddStockerFragment : Fragment() {
         }
         val action = AddItemFragmentDirections.actionAddItemFragmentToItemFragment()
         findNavController().navigate(action)
-    }
+    }*/
 }

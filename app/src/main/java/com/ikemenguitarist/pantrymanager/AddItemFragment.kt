@@ -46,12 +46,17 @@ class AddItemFragment : Fragment(),DatePickerDialog.OnDateSetListener {
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val id = navigationArgs.itemId
-        if(id>0){
-            viewModel.retrieveItem(id).observe(this.viewLifecycleOwner){selectItem ->
-                item = selectItem
-                bind(item)}
-        }else{binding.saveAction.setOnClickListener { addNewItem() }
+        when(viewModel.currentState.value){
+            getString(R.string.edit_fragment_title)-> {
+                viewModel.retrieveItem(id).observe(this.viewLifecycleOwner){selectItem ->
+                    item = selectItem
+                    bind(item)}
+            }
+            getString(R.string.add_fragment_title)->{
+                binding.saveAction.setOnClickListener { addNewItem() }
+            }
+            else->{
+            }
 
         }
     }

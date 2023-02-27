@@ -6,20 +6,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import com.ikemenguitarist.pantrymanager.ItemFragment
 import com.ikemenguitarist.pantrymanager.R
 import com.ikemenguitarist.pantrymanager.StockViewModel
-import com.ikemenguitarist.pantrymanager.databinding.FragmentItemBinding
+import com.ikemenguitarist.pantrymanager.StockViewModelFactory
 import com.ikemenguitarist.pantrymanager.databinding.FragmentPantryBinding
-import com.ikemenguitarist.pantrymanager.ui.ItemListAdapter
-import com.ikemenguitarist.pantrymanager.ui.home.HomeFragmentDirections
 
+private const val NUM_TABS = 7
 
-class ItemFragment : Fragment() {
-    private val viewModel: StockViewModel by activityViewModels()
+class PantryFragment : Fragment() {
+    private lateinit var viewPagerAdapter: ViewPagerAdapter
+    private lateinit var viewPager: ViewPager2
 
     private var _binding: FragmentPantryBinding? = null
     private val binding get() = _binding!!
@@ -31,62 +37,42 @@ class ItemFragment : Fragment() {
     ): View? {
         _binding = FragmentPantryBinding.inflate(inflater, container, false)
 
-        val slidingPaneLayout = binding.slidingPaneLayout
-
         // Connect the SlidingPaneLayout to the system back button.
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            ItemListOnBackPressedCallback(slidingPaneLayout)
-        )
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val tabTitleArray =
+            arrayOf(
+                getString(R.string.item_fragment_title),
 
-        val adapter = StockListAdapter {
-            val action = HomeFragmentDirections.actionNavigationPantryToItemFragment()
-                // getString(R.string.add_fragment_title)
-            this.findNavController().navigate(action)
+            )
+        viewPagerAdapter = ViewPagerAdapter(requireActivity())
+        viewPager = binding.pager
+        viewPager.adapter = viewPagerAdapter
+
+
+        val tabLayout = binding.tabLayout
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = tabTitleArray[position]
+        }.attach()
+
+    }
+
+    class ViewPagerAdapter(fa: FragmentActivity) :
+        FragmentStateAdapter(fa) {
+
+        override fun getItemCount(): Int {
+            return NUM_TABS
         }
-        binding.stockGrid.layoutManager = LinearLayoutManager(this.context)
-        binding.stockGrid.adapter = adapter
-        // Attach an observer on the allItems list to update the UI automatically when the data
-        // changes.
-        viewModel.allStockers.observe(this.viewLifecycleOwner) { stockers ->
-            stockers.let {
-                adapter.submitList(it)
+
+        override fun createFragment(position: Int): Fragment {
+            when (position) {
+                0 -> return ItemFragment()
+
             }
+            return ItemFragment()
         }
-
-        binding.floatingActionButton.setOnClickListener {
-            viewModel.updateCurrentState(getString(R.string.item_detail_fragment_title))
-            // Navigate to the details screen
-            binding.slidingPaneLayout.openPane()
-        }
-    }
-}
-class ItemListOnBackPressedCallback(
-    private val slidingPaneLayout: SlidingPaneLayout
-) : OnBackPressedCallback(slidingPaneLayout.isSlideable && slidingPaneLayout.isOpen),
-    SlidingPaneLayout.PanelSlideListener {
-
-    init {
-        slidingPaneLayout.addPanelSlideListener(this)
-    }
-
-    override fun handleOnBackPressed() {
-        slidingPaneLayout.closePane()
-    }
-
-    override fun onPanelSlide(panel: View, slideOffset: Float) {
-    }
-
-    override fun onPanelOpened(panel: View) {
-        isEnabled = true
-    }
-
-    override fun onPanelClosed(panel: View) {
-        isEnabled = false
     }
 }

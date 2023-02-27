@@ -6,11 +6,11 @@ import com.ikemenguitarist.pantrymanager.data.ItemDao
 import com.ikemenguitarist.pantrymanager.data.Stocker
 import com.ikemenguitarist.pantrymanager.data.StockerDao
 import kotlinx.coroutines.launch
+import java.lang.IllegalArgumentException
 import java.util.*
 
-class StockViewModel (private val itemDao: ItemDao,private val stockerDao: StockerDao):ViewModel(){
+class StockViewModel (private val itemDao: ItemDao):ViewModel(){
     val allItems: LiveData<List<Item>> = itemDao.getItems().asLiveData()
-    val allStockers:LiveData<List<Stocker>> = stockerDao.getStockers().asLiveData()
 
     private var _currentStocker: MutableLiveData<String> = MutableLiveData<String>()
     val currentStocker: LiveData<String>
@@ -87,8 +87,22 @@ class StockViewModel (private val itemDao: ItemDao,private val stockerDao: Stock
             stocker = currentStocker.value.toString()
         )
     }
+    fun deleteItem(item: Item) {
+        viewModelScope.launch {
+            itemDao.delete(item)
+        }
+    }
     fun updateCurrentState(state:String){
         _currentState.value=state
+    }
+}
+class StockViewModelFactory(private val itemDao: ItemDao) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(StockViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return StockViewModel(itemDao) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel Class")
     }
 
 }

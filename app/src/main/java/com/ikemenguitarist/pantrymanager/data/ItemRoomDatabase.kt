@@ -8,6 +8,7 @@ import java.util.*
 @TypeConverters(Converters::class)
 abstract class ItemRoomDatabase:RoomDatabase() {
     abstract fun itemDao():ItemDao
+    abstract fun stockerDao():StockerDao
     companion object{
         @Volatile
         private var INSTANCE:ItemRoomDatabase? = null
